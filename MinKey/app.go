@@ -15,6 +15,11 @@ import (
 var keyMap = make(map[string]string)
 
 func setKey(w http.ResponseWriter, r *http.Request) {
+	//Allow CORS here By * or specific origin
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+
+	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+
 	vars := mux.Vars(r)
 	key := vars["key"]
 	reqBody, _ := ioutil.ReadAll(r.Body)
@@ -24,6 +29,11 @@ func setKey(w http.ResponseWriter, r *http.Request) {
 }
 
 func getKey(w http.ResponseWriter, r *http.Request) {
+	//Allow CORS here By * or specific origin
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+
+	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+
 	vars := mux.Vars(r)
 	key := vars["key"]
 	value, ok := keyMap[key]
@@ -86,8 +96,8 @@ func handleRequests() {
 	router := mux.NewRouter().StrictSlash(true)
 	router.HandleFunc("/string/{key}", setKey).Methods("PUT", "POST")
 	router.HandleFunc("/string/{key}", getKey).Methods("GET")
-	ip := GetOutboundIP()
-	log.Fatal(http.ListenAndServe(ip.String()+":24500", router))
+	ip := "localhost" //GetOutboundIP().String()
+	log.Fatal(http.ListenAndServe(ip+":24500", router))
 }
 
 func main() {
